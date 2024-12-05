@@ -1,5 +1,8 @@
 package org.example;
 
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
+
 import java.util.ArrayList;
 
 public class BattleShip {
@@ -17,6 +20,7 @@ public class BattleShip {
         shoot(0, 1);
 
         printField();
+        clear();
     }
 
 
@@ -88,15 +92,26 @@ public class BattleShip {
     public void shoot(int x, int y) {
         if (field[x][y] == 0) {
             field[x][y] = 1;
-        }
-        else
+        } else
             field[x][y] = 2;
     }
 
-    public void clear(){
-        for (int i = 0; i < 100; i++) {
-            System.out.println();
-        }
+    public void clear() {
+//        for (int i = 0; i < 100; i++) {
+//            System.out.println();
+//        }
+
+        AnsiConsole.systemInstall();
+
+        // Clear the screen using ANSI escape codes
+        System.out.print(Ansi.ansi().eraseScreen().reset());
+
+        System.out.println("\033[H\033[2J");
+        // Print something after clearing the screen
+        System.out.println("The screen is cleared!");
+
+        // Optionally, reset AnsiConsole (not required, but can be used if needed)
+        AnsiConsole.systemUninstall();
 
     }
 
