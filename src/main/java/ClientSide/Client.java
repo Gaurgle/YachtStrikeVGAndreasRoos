@@ -22,10 +22,8 @@ public class Client {
                     System.out.println(input);
                 }
             }
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
