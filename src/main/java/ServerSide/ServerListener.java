@@ -12,6 +12,7 @@ public class ServerListener {
             System.out.println(serverUp);
             while (true) {
                 Player player1 = new Player(listener.accept(), '1');
+                player1.sendToClient(welcome); // <- denna rad är temporär kod för test, ska antagligen ersättas
                 Player player2 = new Player(listener.accept(), '2');
                 Game game = new Game(player1, player2);
                 game.start();

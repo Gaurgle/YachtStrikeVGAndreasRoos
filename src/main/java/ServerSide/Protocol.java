@@ -11,6 +11,7 @@ public class Protocol {
         currentPlayer = player1;
 
         player1.sendToClient("ALLOW_SELECT_PRESET");
+        player2.sendToClient("test");
 
 
     }
