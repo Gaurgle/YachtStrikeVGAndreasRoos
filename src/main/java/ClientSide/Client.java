@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Client {
 
-    private final int[][] field = new int[10][10];
+    private final int[][] clientField = new int[10][10];
     private ArrayList<String> letters;
     private ArrayList<String> shots = new ArrayList<>();
 
@@ -44,7 +44,7 @@ public class Client {
                 clear();
                 createField();
                 preset(i);
-                printField();
+                printField(clientField);
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 String answer;
@@ -64,7 +64,7 @@ public class Client {
                         clear();
                         createField();
                         preset(i++);
-                        printField();
+                        printField(clientField);
                     if (i == 6) {
                         i = 1;
                     }
@@ -126,7 +126,7 @@ public class Client {
             boolean hit = shoot(x,y);
 
             clear();
-            printField();
+            printField(clientField);
 
             out.println(hit);
 
@@ -165,9 +165,9 @@ public class Client {
         System.out.println("J |  |  |  |  |  |  |  |  |  |  |");
           */
 
-        for (int i = 0; i < field.length; i++) {
-            for (int j = 0; j < field[i].length; j++) {
-                field[i][j] = 0;
+        for (int i = 0; i < clientField.length; i++) {
+            for (int j = 0; j < clientField[i].length; j++) {
+                clientField[i][j] = 0;
             }
         }
 
@@ -187,7 +187,7 @@ public class Client {
 
     }
 
-    public void printField() {
+    public void printField(int[][] field) {
 
         System.out.println("    1   2   3   4   5   6   7   8   9   10");
 
@@ -211,7 +211,7 @@ public class Client {
     }
 
     public void placeShip(int x, int y) {
-        field[x][y] = 1;
+        clientField[x][y] = 1;
     }
 
     public void placeShips(String shipPlacement) {
@@ -269,12 +269,12 @@ public class Client {
     }
 
     public boolean shoot(int x, int y) {
-        if (field[x][y] == 0) {
-            field[x][y] = 2;
+        if (clientField[x][y] == 0) {
+            clientField[x][y] = 2;
             return false;
         }
         else {
-            field[x][y] = 3;
+            clientField[x][y] = 3;
             return true;
         }
     }
