@@ -283,6 +283,13 @@ public class Client {
             System.out.println();
         }
     }
+    public static void typeWriterEffect(String text) throws InterruptedException {
+        for (char c : text.toCharArray()) {
+            System.out.print(c);  
+            Thread.sleep(50);
+        }
+        System.out.println();
+    }
 
     private void startMenu(){
         boolean running = true;
@@ -298,6 +305,7 @@ public class Client {
             System.out.println("3. Exit");
 
             int choice = scanner.nextInt();
+            scanner.nextLine();
 
 
             switch (choice) {
@@ -326,10 +334,13 @@ public class Client {
                     };
 
                     clear();
-                    scanner.nextLine();
                     for (String step : steps) {
-                        System.out.println(step);
-                        System.out.println("Press enter to continue");
+                        try {
+                            typeWriterEffect(step);
+                        } catch (InterruptedException e) {
+                            System.err.println("Typing interrupted: " + e.getMessage());
+                        }
+                        System.out.println("\nPress enter to continue");
                         scanner.nextLine();
                     }
                     break;
@@ -365,4 +376,6 @@ public class Client {
 
         scanner.close();
     }
+
 }
+
