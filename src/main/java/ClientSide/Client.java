@@ -2,7 +2,6 @@ package ClientSide;
 
 import java.io.*;
 import java.net.Socket;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class Client {
@@ -28,7 +27,7 @@ public class Client {
                 if (in.ready()) {
                     input = in.readLine();
                     System.out.println(input);
-                    determaineAction(input);
+                    determineAction(input);
 
                 }
             }
@@ -37,7 +36,7 @@ public class Client {
         }
     }
 
-    private void determaineAction(String input) {
+    private void determineAction(String input) {
 
         if (input.equals("ALLOW_SELECT_PRESET")) {
             {
@@ -95,7 +94,6 @@ public class Client {
                         answer = reader.readLine();
                     }
                     while(!answer.matches("^[A-Ja-j][0-9]$"));
-                    answer = answer.toUpperCase();
 
                     if (!shots.contains(answer)) {
                         {
