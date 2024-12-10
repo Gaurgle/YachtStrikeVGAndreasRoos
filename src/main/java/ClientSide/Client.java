@@ -3,22 +3,21 @@ package ClientSide;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Client {
 
     private final int[][] clientField = new int[10][10];
     private ArrayList<String> letters;
     private ArrayList<String> shots = new ArrayList<>();
-
     PrintWriter out;
     public Client() {
+        startMenu();
 
-        int portNumber = 23456;
-
-        try (Socket socket = new Socket("localhost", portNumber);
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-            out = new PrintWriter(socket.getOutputStream(), true);
+                    int portNumber = 23456;
+                    try (Socket socket = new Socket("localhost", portNumber);
+                         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+                        out = new PrintWriter(socket.getOutputStream(), true);
 
             //Bara lite temporär kod för att testa att uppkopling funkar:
             String input;
@@ -284,5 +283,4 @@ public class Client {
             System.out.println();
         }
     }
-
 }
