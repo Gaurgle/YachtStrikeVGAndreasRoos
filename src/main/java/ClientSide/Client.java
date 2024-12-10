@@ -1,35 +1,36 @@
 package ClientSide;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Client {
 
     private final int[][] field = new int[10][10];
-    private ArrayList<String> letters;
-    private ArrayList<String> shots = new ArrayList<>();
-
     PrintWriter out;
+
+    private ArrayList<String> letters;
+    private final ArrayList<String> shots = new ArrayList<>();
+
     public Client() {
 
         int portNumber = 23456;
 
         try (Socket socket = new Socket("localhost", portNumber);
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
             out = new PrintWriter(socket.getOutputStream(), true);
 
-            //Bara lite temporär kod för att testa att uppkopling funkar:
             String input;
-            //while ((input = in.readLine()) != null) {
-            while(true){
+            while (true) {
                 if (in.ready()) {
                     input = in.readLine();
-                    System.out.println(input);
                     determaineAction(input);
-
                 }
             }
         } catch (IOException e) {
@@ -37,26 +38,29 @@ public class Client {
         }
     }
 
+    public static void main(String[] args) {
+        new Client();
+    }
+
     private void determaineAction(String input) {
 
         if (input.equals("ALLOW_SELECT_PRESET")) {
-            {
-                int i = 1;
-                clear();
-                createField();
-                preset(i);
-                printField();
+            int i = 1;
+            clear();
+            createField();
+            preset(i);
+            printField();
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                String answer;
-                try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            String answer;
+            try {
 
-                    while (true){
+                while (true) {
                     System.out.println("Do you want to use this preset? (Y/N)");
                     answer = reader.readLine().toUpperCase();
 
                     if (answer.equals("Y")) {
-                        System.out.println("Preset selected.");
+                        System.out.println("Preset selected. Wait for other player.");
 
                         out.println("PRESET_SELECTED:" + i);
 
@@ -66,35 +70,26 @@ public class Client {
                         createField();
                         preset(i++);
                         printField();
-                    if (i == 6) {
-                        i = 1;
+                        if (i == 6) {
+                            i = 1;
+                        }
                     }
-                    }
-
-
-
                 }
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }
-
-        else if (input.equals("ALLOW_SHOT")) {
+        } else if (input.equals("ALLOW_SHOT")) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String answer;
 
             try {
-                while (true){
+                while (true) {
 
-                    do{
+                    do {
                         System.out.print("Enter coordinates for shot: ");
                         answer = reader.readLine();
                     }
-                    while(!answer.matches("^[A-Ja-j][0-9]$"));
+                    while (!answer.matches("^[A-Ja-j][0-9]$"));
                     answer = answer.toUpperCase();
 
                     if (!shots.contains(answer)) {
@@ -107,50 +102,42 @@ public class Client {
                     }
                 }
 
-                System.out.println(answer);
-
-
                 int x = letters.indexOf(String.valueOf(answer.charAt(0)).toUpperCase());
                 int y = Integer.parseInt(String.valueOf(answer.charAt(1)));
 
-                out.println(x+","+y);
+                out.println(x + "," + y);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        else if (input.startsWith("CHECK_SHOT")) {
+        } else if (input.startsWith("CHECK_SHOT")) {
             String cords = input.split(":")[1];
             int x = Integer.parseInt(cords.split(",")[0]);
-            int y = Integer.parseInt(cords.split(",")[1])-1;
+            int y = Integer.parseInt(cords.split(",")[1]) - 1;
 
-            boolean hit = shoot(x,y);
+            boolean hit = shoot(x, y);
 
             clear();
             printField();
 
             out.println(hit);
 
-        }
-
-        else if (input.startsWith("SEND_HIT_STATUS")){
+        } else if (input.startsWith("SEND_HIT_STATUS")) {
             boolean hit = Boolean.parseBoolean(input.split(":")[1]);
 
-            if (hit)
+            if (hit) {
                 System.out.println("hit!");
+                out.println(checkField());
+            }
             else if (!hit)
-                System.out.println("miss..");
-
+                System.out.println("miss.. \nWait for other player.");
+        } else if (input.startsWith("GAME_FINISHED")) {
+            String winMessage = input.split(":")[1];
+            System.out.println(winMessage);
+            //Todo: lägg in meny-metod
 
         }
-
     }
-
-    public static void main(String[] args) {
-        new Client();
-    }
-
 
     public void createField() {
         //battleship field
@@ -173,20 +160,9 @@ public class Client {
             }
         }
 
-
-        letters = new ArrayList<>();
-
-        letters.add("A");
-        letters.add("B");
-        letters.add("C");
-        letters.add("D");
-        letters.add("E");
-        letters.add("F");
-        letters.add("G");
-        letters.add("H");
-        letters.add("I");
-        letters.add("J");
-
+        letters = new ArrayList<>(List.of("A","B","C","D","E","F","G","H","I","J"));
+        //Collections.addAll(letters, "A","B","C","D","E","F","G","H","I","J");
+        //letters.addAll("A","B","C","D","E","F","G","H","I","J")
     }
 
     public void printField() {
@@ -194,7 +170,6 @@ public class Client {
         System.out.println("    1   2   3   4   5   6   7   8   9   10");
 
         for (int i = 0; i < field.length; i++) {
-            System.out.print((letters.get(i) + " | "));
             for (int j = 0; j < field[i].length; j++) {
                 if (field[i][j] == 0) {
                     System.out.print("  | ");
@@ -202,14 +177,11 @@ public class Client {
                     System.out.print("0 | ");
                 } else if (field[i][j] == 2) {
                     System.out.print("* | ");
-                }
-                else if (field[i][j] == 3) {
+                } else if (field[i][j] == 3) {
                     System.out.print("X | ");
                 }
             }
-            System.out.println();
         }
-
     }
 
     public void placeShip(int x, int y) {
@@ -226,7 +198,7 @@ public class Client {
         }
     }
 
-    private void preset(int x){
+    private void preset(int x) {
 
         switch (x) {
             case 1:
@@ -274,17 +246,43 @@ public class Client {
         if (field[x][y] == 0) {
             field[x][y] = 2;
             return false;
-        }
-        else {
+        } else {
             field[x][y] = 3;
             return true;
         }
     }
 
-    public void clear(){
+    public boolean checkField() {
+        boolean gameStillActive = true;
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field[i].length; j++) {
+                if (field[i][j] == 1) {
+                    gameStillActive = false;
+                    break;
+                }
+            }
+        }
+        return gameStillActive;
+    }
+
+    public void clear() {
         for (int i = 0; i < 100; i++) {
             System.out.println();
         }
     }
 
+//    public void closeConnection() {
+//        try {
+//            if (in != null)
+//                in.close();
+//            if (out != null) {
+//                out.close();
+//            }
+//            if (socket != null && !socket.isClosed()) {
+//                socket.close();
+//            }
+//        } catch (IOException e) {
+//            System.err.println("Error closing socket or in/out streams: " + e.getMessage());
+//        }
+//    }
 }
