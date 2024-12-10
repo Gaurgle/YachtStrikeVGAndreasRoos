@@ -30,58 +30,36 @@ public class Client {
 
             switch (choice) {
                 case 1:
-                    String step1 = "Step 1: Introduction\n" +
-                            "Welcome to Battleship! This game is played on a 10x10 grid with coordinates (A-J, 1-10).";
+                    String[] steps = {
+                            "Step 1: Introduction\n" +
+                                    "Welcome to Battleship! This game is played on a 10x10 grid with coordinates (A-J, 1-10).",
 
-                    String step2 = "Step 2: The Grid\n" +
-                            "The grid is 10x10 with rows labeled A-J and columns labeled 1-10. Example: A5.";
+                            "Step 2: The Grid\n" +
+                                    "The grid is 10x10 with rows labeled A-J and columns labeled 1-10. Example: A5.",
 
-                    String step3 = "Step 3: Setting Up\n" +
-                            "Please Choose your layout: \n TIPS: Layout ISAAC always wins the game";
+                            "Step 3: Setting Up\n" +
+                                    "Please Choose your layout: \nTIPS: Layout ISAAC always wins the game",
 
-                    String step4 = "Step 4: Taking Turns\n" +
-                            "Players take turns calling out coordinates (e.g., A5). Game will tell you either 'hit' or 'miss'. while it will update your grid.";
+                            "Step 4: Taking Turns\n" +
+                                    "Players take turns calling out coordinates (e.g., A5). Game will tell you either 'hit' or 'miss'. while it will update your grid.",
 
-                    String step5 = "Step 5: Objective\n" +
-                            "Sink all of your opponent’s ships by hitting all the squares of each ship.";
+                            "Step 5: Objective\n" +
+                                    "Sink all of your opponent’s ships by hitting all the squares of each ship.",
 
-                    String step6 = "Step 6: Example Turn\n" +
-                            "Player 1: 'I fire at C7'. Opponent checks, says 'hit' or 'miss'. Player updates grid.";
+                            "Step 6: Example Turn\n" +
+                                    "Player 1: 'I fire at C7'. Opponent checks, says 'hit' or 'miss'. Player updates grid.",
 
-                    String step7 = "Step 7: End of the Game\n" +
-                            "The game ends when all of one player’s ships are sunk. The other player wins.";
-
+                            "Step 7: End of the Game\n" +
+                                    "The game ends when all of one player’s ships are sunk. The other player wins."
+                    };
 
                     clear();
-                    System.out.println(step1);
-                    System.out.println("Press enter to continue");
                     scanner.nextLine();
-                    scanner.nextLine();
-
-                    System.out.println(step2);
-                    System.out.println("Press enter to continue");
-                    scanner.nextLine();
-
-                    System.out.println(step3);
-                    System.out.println("Press enter to continue");
-                    scanner.nextLine();
-
-                    System.out.println(step4);
-                    System.out.println("Press enter to continue");
-                    scanner.nextLine();
-
-                    System.out.println(step5);
-                    System.out.println("Press enter to continue");
-                    scanner.nextLine();
-
-                    System.out.println(step6);
-                    System.out.println("Press enter to continue");
-                    scanner.nextLine();
-
-                    System.out.println(step7);
-                    System.out.println("Press enter to continue");
-                    scanner.nextLine();
-
+                    for (String step : steps) {
+                        System.out.println(step);
+                        System.out.println("Press enter to continue");
+                        scanner.nextLine();
+                    }
                     break;
                 case 2:
                     System.out.println("Starting the game... Get ready!");
