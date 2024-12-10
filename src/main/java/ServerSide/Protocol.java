@@ -32,7 +32,7 @@ public class Protocol {
                 currentPlayer.getOpponent().sendToClient("CHECK_SHOT:" + shot);
 
                 hit = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
-
+                currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit);
                 gameActive = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
                 if (!gameActive){
                     currentPlayer.sendToClient("GAME_FINISHED:Boom! You win!");
@@ -42,7 +42,7 @@ public class Protocol {
 
 
 
-                currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit);
+
 
 
             }

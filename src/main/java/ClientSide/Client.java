@@ -117,13 +117,12 @@ public class Client {
 
             boolean hit = shoot(x, y);
 
-            if (hit)
-                out.println(checkField());
 
             clear();
             printField();
 
             out.println(hit);
+            out.println(checkField());
 
         } else if (input.startsWith("SEND_HIT_STATUS")) {
             boolean hit = Boolean.parseBoolean(input.split(":")[1]);
