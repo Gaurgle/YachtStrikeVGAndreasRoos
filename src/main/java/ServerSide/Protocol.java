@@ -11,23 +11,31 @@ public class Protocol {
         currentPlayer = player1;
 
         player1.sendToClient("ALLOW_SELECT_PRESET");
-        player2.sendToClient("test");
 
         String preset1 = player1.receieveFromClient();
-
         System.out.println(preset1.split(":")[0]);
 
+        player2.sendToClient("ALLOW_SELECT_PRESET");
         String preset2 = player2.receieveFromClient();
 
         System.out.println(preset2.split(":")[0]);
 
-        boolean hit = true;
-        while(hit){
-            currentPlayer.sendToClient("GET_SHOT");
-            String shots = currentPlayer.receieveFromClient();
-            System.out.println();
+        boolean gameActive = true;
+        while (gameActive) {
+            boolean hit = true;
+            while (hit) {
+                currentPlayer.sendToClient("ALLOW_SHOT");
+                String shot = currentPlayer.receieveFromClient();
 
+                System.out.println("shot at: " + shot);
+
+                currentPlayer.getOpponent().sendToClient("CHECK_SHOT:" + shot);
+
+                hit = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
+
+                currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit);
+            }
+            currentPlayer = currentPlayer.getOpponent();
         }
-
     }
 }

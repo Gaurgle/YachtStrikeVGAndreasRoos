@@ -2,13 +2,14 @@ package ClientSide;
 
 import java.io.*;
 import java.net.Socket;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class Client {
 
     private final int[][] field = new int[10][10];
     private ArrayList<String> letters;
-    private StringBuilder shots;
+    private ArrayList<String> shots = new ArrayList<>();
 
     PrintWriter out;
     public Client() {
@@ -52,7 +53,7 @@ public class Client {
 
                     while (true){
                     System.out.println("Do you want to use this preset? (Y/N)");
-                    answer = reader.readLine();
+                    answer = reader.readLine().toUpperCase();
 
                     if (answer.equals("Y")) {
                         System.out.println("Preset selected.");
@@ -82,32 +83,66 @@ public class Client {
             }
         }
 
-        else if (input.equals("GET_SHOT")) {
+        else if (input.equals("ALLOW_SHOT")) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String answer;
 
             try {
-                System.out.print("Enter coordinates for shot: ");
-                answer = reader.readLine();
-                String[] coordinates = answer.split(",");
+                while (true){
 
+                    do{
+                        System.out.print("Enter coordinates for shot: ");
+                        answer = reader.readLine();
+                    }
+                    while(!answer.matches("^[A-Ja-j][0-9]$"));
+                    answer = answer.toUpperCase();
 
-                clear();
-
-                int x = letters.indexOf(coordinates[0].toUpperCase());
-                int y = Integer.parseInt(coordinates[1]);
-                hit = shoot(x, y);
-                printField();
-
-                shots.append(x + "," +  i + " ")
-
-                if (!hit)
-                {
-                    out.println(shots.toString());
+                    if (!shots.contains(answer)) {
+                        {
+                            shots.add(answer);
+                            break;
+                        }
+                    } else if (shots.contains(answer)) {
+                        System.out.println("Already shot");
+                    }
                 }
+
+                System.out.println(answer);
+
+
+                int x = letters.indexOf(String.valueOf(answer.charAt(0)).toUpperCase());
+                int y = Integer.parseInt(String.valueOf(answer.charAt(1)));
+
+                out.println(x+","+y);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        else if (input.startsWith("CHECK_SHOT")) {
+            String cords = input.split(":")[1];
+            int x = Integer.parseInt(cords.split(",")[0]);
+            int y = Integer.parseInt(cords.split(",")[1])-1;
+
+            boolean hit = shoot(x,y);
+
+            clear();
+            printField();
+
+            out.println(hit);
+
+        }
+
+        else if (input.startsWith("SEND_HIT_STATUS")){
+            boolean hit = Boolean.parseBoolean(input.split(":")[1]);
+
+            if (hit)
+                System.out.println("hit!");
+            else if (!hit)
+                System.out.println("miss..");
+
+
         }
 
     }
@@ -166,6 +201,9 @@ public class Client {
                 } else if (field[i][j] == 1) {
                     System.out.print("0 | ");
                 } else if (field[i][j] == 2) {
+                    System.out.print("* | ");
+                }
+                else if (field[i][j] == 3) {
                     System.out.print("X | ");
                 }
             }
@@ -196,7 +234,7 @@ public class Client {
                 placeShips("0,0 0,1 0,2 0,3 0,4"); // Carrier (5)
                 placeShips("2,2 2,3 2,4 2,5");     // Battleship (4)
                 placeShips("4,0 4,1 4,2");         // Cruiser (3)
-                placeShips("6,6 6,8");             // Destroyer (2)
+                placeShips("6,6 6,5");             // Destroyer (2)
                 break;
             case 2:
                 // Clustered arrangement
@@ -234,12 +272,13 @@ public class Client {
 
     public boolean shoot(int x, int y) {
         if (field[x][y] == 0) {
-            field[x][y] = 1;
+            field[x][y] = 2;
             return false;
         }
-        else
-            field[x][y] = 2;
-        return true;
+        else {
+            field[x][y] = 3;
+            return true;
+        }
     }
 
     public void clear(){
