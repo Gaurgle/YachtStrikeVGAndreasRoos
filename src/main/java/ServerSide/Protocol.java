@@ -33,17 +33,23 @@ public class Protocol {
 
                 hit = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
 
-                currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit);
-
                 gameActive = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
                 if (!gameActive){
                     currentPlayer.sendToClient("GAME_FINISHED:Boom! You win!");
                     currentPlayer.getOpponent().sendToClient("GAME_FINISHED:You lost.");
+                    break;
                 }
+
+
+
+                currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit);
+
+
             }
             currentPlayer = currentPlayer.getOpponent();
         }
         player1.closeConnection();
         player2.closeConnection();
+        System.out.println("Game finished");
     }
 }

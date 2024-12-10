@@ -117,6 +117,9 @@ public class Client {
 
             boolean hit = shoot(x, y);
 
+            if (hit)
+                out.println(checkField());
+
             clear();
             printField();
 
@@ -127,7 +130,7 @@ public class Client {
 
             if (hit) {
                 System.out.println("hit!");
-                out.println(checkField());
+                System.out.println("borde komma hit");
             }
             else if (!hit)
                 System.out.println("miss.. \nWait for other player.");
@@ -161,8 +164,6 @@ public class Client {
         }
 
         letters = new ArrayList<>(List.of("A","B","C","D","E","F","G","H","I","J"));
-        //Collections.addAll(letters, "A","B","C","D","E","F","G","H","I","J");
-        //letters.addAll("A","B","C","D","E","F","G","H","I","J")
     }
 
     public void printField() {
@@ -170,17 +171,17 @@ public class Client {
         System.out.println("    1   2   3   4   5   6   7   8   9   10");
 
         for (int i = 0; i < field.length; i++) {
+            System.out.print((letters.get(i) + " | "));
             for (int j = 0; j < field[i].length; j++) {
                 if (field[i][j] == 0) {
                     System.out.print("  | ");
                 } else if (field[i][j] == 1) {
                     System.out.print("0 | ");
                 } else if (field[i][j] == 2) {
-                    System.out.print("* | ");
-                } else if (field[i][j] == 3) {
                     System.out.print("X | ");
                 }
             }
+            System.out.println();
         }
     }
 
