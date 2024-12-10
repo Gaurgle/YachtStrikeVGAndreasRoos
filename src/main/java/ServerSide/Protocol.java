@@ -13,6 +13,21 @@ public class Protocol {
         player1.sendToClient("ALLOW_SELECT_PRESET");
         player2.sendToClient("test");
 
+        String preset1 = player1.receieveFromClient();
+
+        System.out.println(preset1.split(":")[0]);
+
+        String preset2 = player2.receieveFromClient();
+
+        System.out.println(preset2.split(":")[0]);
+
+        boolean hit = true;
+        while(hit){
+            currentPlayer.sendToClient("GET_SHOT");
+            String shots = currentPlayer.receieveFromClient();
+            System.out.println();
+
+        }
 
     }
 }
