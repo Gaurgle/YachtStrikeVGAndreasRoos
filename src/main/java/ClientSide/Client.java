@@ -283,4 +283,86 @@ public class Client {
             System.out.println();
         }
     }
+
+    private void startMenu(){
+        boolean running = true;
+        Scanner scanner = new Scanner(System.in);
+
+        while (running) {
+            clear();
+            System.out.println("WELCOME TO BATTLESHIP\n");
+
+            System.out.println("Please select an option:");
+            System.out.println("1. Info about the game");
+            System.out.println("2. Start the game");
+            System.out.println("3. Exit");
+
+            int choice = scanner.nextInt();
+
+
+            switch (choice) {
+                case 1:
+                    String[] steps = {
+                            "Step 1: Introduction\n" +
+                                    "Welcome to Battleship! This game is played on a 10x10 grid with coordinates (A-J, 1-10).",
+
+                            "Step 2: The Grid\n" +
+                                    "The grid is 10x10 with rows labeled A-J and columns labeled 1-10. Example: A5.",
+
+                            "Step 3: Setting Up\n" +
+                                    "Please Choose your layout: \nTIPS: Layout ISAAC always wins the game",
+
+                            "Step 4: Taking Turns\n" +
+                                    "Players take turns calling out coordinates (e.g., A5). Game will tell you either 'hit' or 'miss'. while it will update your grid.",
+
+                            "Step 5: Objective\n" +
+                                    "Sink all of your opponent’s ships by hitting all the squares of each ship.",
+
+                            "Step 6: Example Turn\n" +
+                                    "Player 1: 'I fire at C7'. Opponent checks, says 'hit' or 'miss'. Player updates grid.",
+
+                            "Step 7: End of the Game\n" +
+                                    "The game ends when all of one player’s ships are sunk. The other player wins."
+                    };
+
+                    clear();
+                    scanner.nextLine();
+                    for (String step : steps) {
+                        System.out.println(step);
+                        System.out.println("Press enter to continue");
+                        scanner.nextLine();
+                    }
+                    break;
+                case 2:
+                    System.out.println("Starting the game... Get ready!");
+
+                    int portNumber = 23456;
+                    try (Socket socket = new Socket("localhost", portNumber);
+                         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+                        out = new PrintWriter(socket.getOutputStream(), true);
+
+                        String input;
+                        while (true) {
+                            if (in.ready()) {
+                                input = in.readLine();
+                                System.out.println(input);
+                                determineAction(input);
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    break;
+                case 3:
+                    System.out.println("Exiting the program. Goodbye!");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please select 1, 2, or 3.");
+            }
+        }
+
+        scanner.close();
+    }
 }
