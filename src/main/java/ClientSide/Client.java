@@ -286,7 +286,7 @@ public class Client {
     public static void typeWriterEffect(String text) throws InterruptedException {
         for (char c : text.toCharArray()) {
             System.out.print(c);  
-            Thread.sleep(50);
+            Thread.sleep(15);
         }
         System.out.println();
     }
