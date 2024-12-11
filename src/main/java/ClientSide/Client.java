@@ -12,8 +12,10 @@ public class Client {
     private ArrayList<String> letters;
     private ArrayList<String> shots = new ArrayList<>();
     PrintWriter out;
+    BufferedReader reader;
 
     public Client() {
+        reader = new BufferedReader(new InputStreamReader(System.in));
         startMenu();
 
         int portNumber = 23456;
@@ -45,7 +47,6 @@ public class Client {
                 preset(i);
                 printField(clientField);
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 String answer;
                 try {
 
@@ -75,7 +76,6 @@ public class Client {
             }
         }
         else if (input.equals("ALLOW_SHOT")) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String answer;
 
             try {
@@ -130,6 +130,12 @@ public class Client {
         else if (input.startsWith("GAME_FINISHED")) {
             String winMessage = input.split(":")[1];
             System.out.println(winMessage);
+            System.out.println("Press enter to continue.");
+            try {
+                reader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             startMenu();
         }
 
@@ -160,7 +166,6 @@ public class Client {
                 clientField[i][j] = 0;
             }
         }
-
         letters = new ArrayList<>(List.of("A","B","C","D","E","F","G","H","I","J"));
     }
 
@@ -184,7 +189,6 @@ public class Client {
             }
             System.out.println();
         }
-
     }
 
     public void placeShip(int x, int y) {
