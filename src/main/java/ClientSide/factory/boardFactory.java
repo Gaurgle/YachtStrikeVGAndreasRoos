@@ -24,7 +24,7 @@ public class boardFactory {
     public void userInput(){
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("choose ship");
+        System.out.println("choose ship:");
         for (String harbour : harbours) {
             System.out.println(harbour +" ");
         }
@@ -62,7 +62,7 @@ public class boardFactory {
 
     // test
     public static void main(String[] args) {
-        shipFactory shipFactory = new shipFactory(5,"Shippy",true);
+        shipFactory shipFactory = new shipFactory();
         boardFactory boardFactory = new boardFactory(1,shipFactory);
 
         boardFactory.userInput();

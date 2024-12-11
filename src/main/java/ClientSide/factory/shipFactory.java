@@ -5,21 +5,12 @@ import java.util.List;
 import java.util.Random;
 
 public class shipFactory {
-    private final int shipSize;
-    private boolean isVertical;
-    private String shipName;
     private List<Ship> ships;
 
-    public shipFactory(int shipSize, String shipName, boolean isVertical) {
-        this.shipSize = shipSize;
-        this.shipName = shipName;
-        this.isVertical = isVertical;
+    public shipFactory() {
         this.ships = new ArrayList<>();
     }
 
-    public int getShipSize() {
-        return shipSize;
-    }
 
     public void createShip(String ship){
         Ship createdShip = switch(ship){
