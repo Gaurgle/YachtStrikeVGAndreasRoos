@@ -36,7 +36,4 @@ public class shipFactory {
     public List<Ship> getShips(){
         return ships;
     }
-
-    public static void main(String[] args) {
-    }
 }
