@@ -118,8 +118,8 @@ public class Client {
             clear();
             printField(clientField);
 
-            out.println(checkForDestroyedShips());
             out.println(hit);
+            out.println(checkForDestroyedShips());
             out.println(checkField());
 
         }
@@ -128,8 +128,12 @@ public class Client {
 
             if (hit)
                 System.out.println("hit!");
+
             else if (!hit)
                 System.out.println("miss.. \nWait for other player.");
+        }
+        else if (input.startsWith("SEND_SUNKEN_SHIP")) {
+            System.out.println("Ship sunk!");
         }
         else if (input.startsWith("GAME_FINISHED")) {
             String winMessage = input.split(":")[1];
