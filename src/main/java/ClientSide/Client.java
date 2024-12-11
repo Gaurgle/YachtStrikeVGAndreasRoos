@@ -86,7 +86,7 @@ public class Client {
                         System.out.print("Enter coordinates for shot: ");
                         answer = reader.readLine();
                     }
-                    while(!answer.matches("^[A-Ja-j][0-9]$"));
+                    while(!answer.matches("^[A-Ja-j](10|[0-9])$"));
 
                     if (!shots.contains(answer)) {
                         {
@@ -97,9 +97,9 @@ public class Client {
                         System.out.println("Already shot");
                     }
                 }
-
+                //TODO: potentiellt problem?
                 int x = letters.indexOf(String.valueOf(answer.charAt(0)).toUpperCase());
-                int y = Integer.parseInt(String.valueOf(answer.charAt(1)));
+                int y = Integer.parseInt(answer.substring(1));
 
                 out.println(x+","+y);
 
