@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Client {
@@ -22,15 +21,15 @@ public class Client {
         int portNumber = 23456;
 
         try (Socket socket = new Socket("localhost", portNumber);
-
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+
             out = new PrintWriter(socket.getOutputStream(), true);
 
             String input;
             while (true) {
                 if (in.ready()) {
                     input = in.readLine();
-                    determaineAction(input);
+                    determineAction(input);
                 }
             }
         } catch (IOException e) {
@@ -42,7 +41,8 @@ public class Client {
         new Client();
     }
 
-    private void determaineAction(String input) {
+    private void determineAction(String input) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         if (input.equals("ALLOW_SELECT_PRESET")) {
             int i = 1;
@@ -51,7 +51,6 @@ public class Client {
             preset(i);
             printField();
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String answer;
             try {
 
@@ -79,12 +78,10 @@ public class Client {
                 e.printStackTrace();
             }
         } else if (input.equals("ALLOW_SHOT")) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String answer;
 
             try {
                 while (true) {
-
                     do {
                         System.out.print("Enter coordinates for shot: ");
                         answer = reader.readLine();
@@ -129,7 +126,6 @@ public class Client {
 
             if (hit) {
                 System.out.println("hit!");
-                System.out.println("borde komma hit");
             }
             else if (!hit)
                 System.out.println("miss.. \nWait for other player.");
@@ -253,11 +249,11 @@ public class Client {
     }
 
     public boolean checkField() {
-        boolean gameStillActive = true;
+        boolean gameStillActive = false;
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field[i].length; j++) {
                 if (field[i][j] == 1) {
-                    gameStillActive = false;
+                    gameStillActive = true;
                     break;
                 }
             }
