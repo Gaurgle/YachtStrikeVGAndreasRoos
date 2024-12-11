@@ -30,8 +30,10 @@ public class Protocol {
 
                 currentPlayer.getOpponent().sendToClient("CHECK_SHOT:" + shot);
                 hit = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
-                currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit);
+                //TODO: recieve boolean shipSunk
 
+                currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit);
+                //TODO: add ship sunk to "SEND_HIT_STATUS:" + hit + "\ship sunk"
                 gameActive = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
                 if (!gameActive){
                     currentPlayer.sendToClient("GAME_FINISHED:Boom! You win!");

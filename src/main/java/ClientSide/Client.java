@@ -97,7 +97,7 @@ public class Client {
                         System.out.println("Already shot");
                     }
                 }
-                //TODO: potentiellt problem?
+
                 int x = letters.indexOf(String.valueOf(answer.charAt(0)).toUpperCase());
                 int y = Integer.parseInt(answer.substring(1));
 
@@ -118,8 +118,10 @@ public class Client {
             clear();
             printField(clientField);
 
+            out.println(checkForDestroyedShips());
             out.println(hit);
             out.println(checkField());
+
         }
         else if (input.startsWith("SEND_HIT_STATUS")){
             boolean hit = Boolean.parseBoolean(input.split(":")[1]);
@@ -240,15 +242,29 @@ public class Client {
     }
 
     public void findShipThatGotHitAndDamageIt(int x, int y) {
+
         for (Ship ship : ships) {
             for (int i = 0; i < ship.getCoordinates().length; i += 2) {
                 if (ship.getCoordinates()[i] == x && ship.getCoordinates()[i + 1] == y) {
                     ship.takeDamage();
                     System.out.println(ship + " took 1 damage");
+                    break;
                 }
             }
         }
     }
+
+    public boolean checkForDestroyedShips() {
+        for (Ship ship : ships) {
+            if (!ship.isAfloat()) {
+                ships.remove(ship);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
     public boolean checkField() {
         boolean gameStillActive = false;
