@@ -200,10 +200,11 @@ public class Client {
     public void placeShips(List<Ship> ships) {
 
         for (Ship ship : ships) {
-            String[] coordinates = ship.split(",");
-            int x = Integer.parseInt(coordinates[0]);
-            int y = Integer.parseInt(coordinates[1]);
-            placeShip(x, y);
+            for (int i = 0; i < ship.getCoordinates().length; i += 2) {
+                int x = ship.getCoordinates()[i];
+                int y = ship.getCoordinates()[i + 1];
+                placeShip(x, y);
+            }
         }
     }
 
