@@ -3,19 +3,35 @@ package ClientSide.factory;
 public abstract class Ship {
 
     private final int size;
-    private final boolean isVertical;
+    private int[] coordinates;
 
-    public Ship(int size, boolean isVertical) {
+    private boolean isAfloat;
+
+    public Ship(int size, int[] coordinates) {
         this.size = size;
-        this.isVertical = isVertical;
+        this.coordinates = coordinates;
+        isAfloat = true;
+    }
+
+    public void setCoordinates(int[] coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public int[] getCoordinates() {
+        return coordinates;
     }
 
     public int getSize() {
         return size;
     }
 
-    public boolean getIsVertical() {
-        return isVertical;
+    public boolean isAfloat() {
+        return isAfloat;
+    }
+
+
+    public void sinkShip() {
+        isAfloat = false;
     }
 
 }

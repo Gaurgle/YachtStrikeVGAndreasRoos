@@ -4,14 +4,15 @@ import java.util.List;
 import java.util.Scanner;
 
 public class boardFactory {
+    /*
     private final int[][] board;
     int numBoard;
     private final String[] harbours = {"MONACO", "MALIBU", "NICE", "CANNES", "MARBELLA", "MIAMI BEACH", "ST TROPEZ", "ABU DHABI"};
-    private final shipFactory shipFactory;
+    private final ShipFactory shipFactory;
     private final List<Ship> listOfShips;
 
 
-    public boardFactory(int numBoard, shipFactory shipFactory) {
+    public boardFactory(int numBoard, ShipFactory shipFactory) {
         this.board = new int[numBoard][numBoard]; // does not create grid yet.
         this.numBoard = numBoard;
         this.shipFactory = shipFactory;
@@ -60,9 +61,9 @@ public class boardFactory {
 
     // test
     public static void main(String[] args) {
-        shipFactory shipFactory = new shipFactory();
+        ShipFactory shipFactory = new ShipFactory();
         boardFactory boardFactory = new boardFactory(1,shipFactory);
 
         boardFactory.userInput();
-    }
+    }*/
 }
