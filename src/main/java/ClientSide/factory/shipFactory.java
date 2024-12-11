@@ -21,8 +21,7 @@ public class shipFactory {
         return shipSize;
     }
 
-    public Ship createShip(String ship){
-
+    public void createShip(String ship){
         Ship createdShip = switch(ship){
             case "JP" -> new shipJP(randomDirection());
             case "BEZ" -> new shipBEZ(randomDirection());
@@ -35,7 +34,6 @@ public class shipFactory {
         if (createdShip != null) {
             ships.add(createdShip);
         }
-        return createdShip;
     }
 
     // generar random orientation
@@ -46,5 +44,8 @@ public class shipFactory {
 
     public List<Ship> getShips(){
         return ships;
+    }
+
+    public static void main(String[] args) {
     }
 }

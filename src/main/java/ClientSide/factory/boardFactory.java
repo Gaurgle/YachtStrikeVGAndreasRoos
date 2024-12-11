@@ -1,6 +1,9 @@
 package ClientSide.factory;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.List;
+import java.util.Scanner;
 
 public class boardFactory {
     private final int[][] board;
@@ -11,32 +14,41 @@ public class boardFactory {
 
 
     public boardFactory(int numBoard, shipFactory shipFactory) {
-        this.board = new int[numBoard][numBoard]; // does not create board yet.
+        this.board = new int[numBoard][numBoard]; // does not create grid yet.
         this.numBoard = numBoard;
         this.shipFactory = shipFactory;
         this.listOfShips = shipFactory.getShips();
-
     }
 
-    // user to be prompted for harbour. Initializes board and ship creation.
-    // use Sam's board generator here?
-    public String createBord(String harbour) {
+    // testing
+    public void userInput(){
+        Scanner scanner = new Scanner(System.in);
 
-        shipFactory.createShip(harbour);
-
-        if (!isValidHarbour(harbour)) {
-            return "invalid harbour";
+        System.out.println("choose ship");
+        for (String harbour : harbours) {
+            System.out.println(harbour +" ");
         }
 
-        shipFactory.createShip("JP");
-        shipFactory.createShip("BEZ");
-        shipFactory.createShip("MUSK");
-        shipFactory.createShip("TRUMP");
-        shipFactory.createShip("WARREN");
-        numBoard++;
+        System.out.println();
+        String userHarbour = scanner.nextLine();
 
-        return listOfShips.size() + " ships created";
+        if (isValidHarbour(userHarbour)) {
+            System.out.println("Creating ships for harbour "+userHarbour);
+            shipFactory.createShip("JP");
+            shipFactory.createShip("BEZ");
+            shipFactory.createShip("MUSK");
+            shipFactory.createShip("TRUMP");
+            shipFactory.createShip("WARREN");
+            System.out.println("Ships created");
 
+        } else {
+            System.out.println("Invalid harbour.");
+        }
+
+        System.out.println("List of created ships:");
+        for (Ship ship : listOfShips) {
+            System.out.println(ship);
+        }
     }
 
     public boolean isValidHarbour(String harbour) {
@@ -46,5 +58,13 @@ public class boardFactory {
             }
         }
         return false;
+    }
+
+    // test
+    public static void main(String[] args) {
+        shipFactory sf = new shipFactory(5,"Shippy",true);
+        boardFactory bf = new boardFactory(1,sf);
+
+        bf.userInput();
     }
 }
