@@ -12,13 +12,14 @@ public class Client {
     private ArrayList<String> letters;
     private ArrayList<String> shots = new ArrayList<>();
     PrintWriter out;
+
     public Client() {
         startMenu();
 
-                    int portNumber = 23456;
-                    try (Socket socket = new Socket("localhost", portNumber);
-                         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-                        out = new PrintWriter(socket.getOutputStream(), true);
+        int portNumber = 23456;
+        try (Socket socket = new Socket("localhost", portNumber);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+            out = new PrintWriter(socket.getOutputStream(), true);
 
             String input;
             while (true) {
@@ -117,9 +118,7 @@ public class Client {
 
             out.println(hit);
             out.println(checkField());
-
         }
-
         else if (input.startsWith("SEND_HIT_STATUS")){
             boolean hit = Boolean.parseBoolean(input.split(":")[1]);
 
@@ -127,7 +126,8 @@ public class Client {
                 System.out.println("hit!");
             else if (!hit)
                 System.out.println("miss.. \nWait for other player.");
-        } else if (input.startsWith("GAME_FINISHED")) {
+        }
+        else if (input.startsWith("GAME_FINISHED")) {
             String winMessage = input.split(":")[1];
             System.out.println(winMessage);
             startMenu();
@@ -277,7 +277,7 @@ public class Client {
     public static void typeWriterEffect(String text) throws InterruptedException {
         for (char c : text.toCharArray()) {
             System.out.print(c);
-            Thread.sleep(50);
+            Thread.sleep(15);
         }
         System.out.println();
     }
@@ -337,25 +337,7 @@ public class Client {
                     break;
                 case 2:
                     System.out.println("Starting the game... Get ready!");
-
-                    int portNumber = 23456;
-                    try (Socket socket = new Socket("localhost", portNumber);
-                         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-                        out = new PrintWriter(socket.getOutputStream(), true);
-
-                        String input;
-                        while (true) {
-                            if (in.ready()) {
-                                input = in.readLine();
-                                System.out.println(input);
-                                determineAction(input);
-                            }
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    break;
+                   return;
                 case 3:
                     System.out.println("Exiting the program. Goodbye!");
                     running = false;
@@ -364,22 +346,6 @@ public class Client {
                     System.out.println("Invalid choice. Please select 1, 2, or 3.");
             }
         }
-
         scanner.close();
     }
-
-//    public void closeConnection() {
-//        try {
-//            if (in != null)
-//                in.close();
-//            if (out != null) {
-//                out.close();
-//            }
-//            if (socket != null && !socket.isClosed()) {
-//                socket.close();
-//            }
-//        } catch (IOException e) {
-//            System.err.println("Error closing socket or in/out streams: " + e.getMessage());
-//        }
-//    }
 }
