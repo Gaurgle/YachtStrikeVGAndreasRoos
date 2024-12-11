@@ -9,12 +9,14 @@ public abstract class Ship {
 
     public Ship(int size, int[] coordinates) {
         this.size = size;
-        this.coordinates = coordinates;
+        setCoordinates(coordinates);
         isAfloat = true;
     }
 
     public void setCoordinates(int[] coordinates) {
-        this.coordinates = coordinates;
+        if (coordinates.length == size * 2) {
+            this.coordinates = coordinates;
+        }
     }
 
     public int[] getCoordinates() {
