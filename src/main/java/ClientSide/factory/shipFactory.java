@@ -27,7 +27,7 @@ public class shipFactory {
         }
     }
 
-    // generar random orientation
+    // generate random orientation
     public boolean randomDirection(){
         Random random = new Random();
         return random.nextBoolean();

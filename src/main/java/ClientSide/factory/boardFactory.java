@@ -20,7 +20,7 @@ public class boardFactory {
         this.listOfShips = shipFactory.getShips();
     }
 
-    // testing
+    // test input for creating board & ships
     public void userInput(){
         Scanner scanner = new Scanner(System.in);
 
