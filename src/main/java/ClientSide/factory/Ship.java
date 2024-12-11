@@ -4,13 +4,21 @@ public abstract class Ship {
 
     private final int size;
     private int[] coordinates;
-
+    private int healthPoints;
     private boolean isAfloat;
 
     public Ship(int size, int[] coordinates) {
         this.size = size;
+        this.healthPoints = size;
         setCoordinates(coordinates);
         isAfloat = true;
+    }
+
+    public void takeDamage() {
+        healthPoints--;
+        if (healthPoints == 0) {
+            isAfloat = false;
+        }
     }
 
     public void setCoordinates(int[] coordinates) {

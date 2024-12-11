@@ -234,7 +234,19 @@ public class Client {
         }
         else {
             clientField[x][y] = 3;
+            findShipThatGotHitAndDamageIt(x,y);
             return true;
+        }
+    }
+
+    public void findShipThatGotHitAndDamageIt(int x, int y) {
+        for (Ship ship : ships) {
+            for (int i = 0; i < ship.getCoordinates().length; i += 2) {
+                if (ship.getCoordinates()[i] == x && ship.getCoordinates()[i + 1] == y) {
+                    ship.takeDamage();
+                    System.out.println(ship + " took 1 damage");
+                }
+            }
         }
     }
 
