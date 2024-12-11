@@ -62,9 +62,9 @@ public class boardFactory {
 
     // test
     public static void main(String[] args) {
-        shipFactory sf = new shipFactory(5,"Shippy",true);
-        boardFactory bf = new boardFactory(1,sf);
+        shipFactory shipFactory = new shipFactory(5,"Shippy",true);
+        boardFactory boardFactory = new boardFactory(1,shipFactory);
 
-        bf.userInput();
+        boardFactory.userInput();
     }
 }
