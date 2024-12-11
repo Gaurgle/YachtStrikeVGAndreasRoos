@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.List;
 
 public class Client {
 
@@ -19,10 +20,8 @@ public class Client {
                          BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                         out = new PrintWriter(socket.getOutputStream(), true);
 
-            //Bara lite temporär kod för att testa att uppkopling funkar:
             String input;
-            //while ((input = in.readLine()) != null) {
-            while(true){
+            while (true) {
                 if (in.ready()) {
                     input = in.readLine();
                     System.out.println(input);
@@ -54,7 +53,7 @@ public class Client {
                     answer = reader.readLine().toUpperCase();
 
                     if (answer.equals("Y")) {
-                        System.out.println("Preset selected.");
+                        System.out.println("Preset selected. Wait for other player.");
 
                         out.println("PRESET_SELECTED:" + i);
 
@@ -68,16 +67,9 @@ public class Client {
                         i = 1;
                     }
                     }
-
-
-
                 }
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
@@ -86,9 +78,8 @@ public class Client {
             String answer;
 
             try {
-                while (true){
-
-                    do{
+                while (true) {
+                    do {
                         System.out.print("Enter coordinates for shot: ");
                         answer = reader.readLine();
                     }
@@ -103,9 +94,6 @@ public class Client {
                         System.out.println("Already shot");
                     }
                 }
-
-                System.out.println(answer);
-
 
                 int x = letters.indexOf(String.valueOf(answer.charAt(0)).toUpperCase());
                 int y = Integer.parseInt(String.valueOf(answer.charAt(1)));
@@ -128,6 +116,7 @@ public class Client {
             printField(clientField);
 
             out.println(hit);
+            out.println(checkField());
 
         }
 
@@ -137,8 +126,11 @@ public class Client {
             if (hit)
                 System.out.println("hit!");
             else if (!hit)
-                System.out.println("miss..");
-
+                System.out.println("miss.. \nWait for other player.");
+        } else if (input.startsWith("GAME_FINISHED")) {
+            String winMessage = input.split(":")[1];
+            System.out.println(winMessage);
+            //Todo: lägg in meny-metod
 
         }
 
@@ -170,20 +162,7 @@ public class Client {
             }
         }
 
-
-        letters = new ArrayList<>();
-
-        letters.add("A");
-        letters.add("B");
-        letters.add("C");
-        letters.add("D");
-        letters.add("E");
-        letters.add("F");
-        letters.add("G");
-        letters.add("H");
-        letters.add("I");
-        letters.add("J");
-
+        letters = new ArrayList<>(List.of("A","B","C","D","E","F","G","H","I","J"));
     }
 
     public void printField(int[][] field) {
@@ -278,14 +257,27 @@ public class Client {
         }
     }
 
-    public void clear(){
+    public boolean checkField() {
+        boolean gameStillActive = false;
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field[i].length; j++) {
+                if (field[i][j] == 1) {
+                    gameStillActive = true;
+                    break;
+                }
+            }
+        }
+        return gameStillActive;
+    }
+
+    public void clear() {
         for (int i = 0; i < 100; i++) {
             System.out.println();
         }
     }
     public static void typeWriterEffect(String text) throws InterruptedException {
         for (char c : text.toCharArray()) {
-            System.out.print(c);  
+            System.out.print(c);
             Thread.sleep(50);
         }
         System.out.println();
@@ -377,5 +369,18 @@ public class Client {
         scanner.close();
     }
 
+//    public void closeConnection() {
+//        try {
+//            if (in != null)
+//                in.close();
+//            if (out != null) {
+//                out.close();
+//            }
+//            if (socket != null && !socket.isClosed()) {
+//                socket.close();
+//            }
+//        } catch (IOException e) {
+//            System.err.println("Error closing socket or in/out streams: " + e.getMessage());
+//        }
+//    }
 }
-

@@ -26,16 +26,24 @@ public class Protocol {
             while (hit) {
                 currentPlayer.sendToClient("ALLOW_SHOT");
                 String shot = currentPlayer.receieveFromClient();
-
                 System.out.println("shot at: " + shot);
 
                 currentPlayer.getOpponent().sendToClient("CHECK_SHOT:" + shot);
-
                 hit = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
-
                 currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit);
+
+                gameActive = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
+                if (!gameActive){
+                    currentPlayer.sendToClient("GAME_FINISHED:Boom! You win!");
+                    currentPlayer.getOpponent().sendToClient("GAME_FINISHED:You lost.");
+                    break;
+                }
+
             }
             currentPlayer = currentPlayer.getOpponent();
         }
+        player1.closeConnection();
+        player2.closeConnection();
+        System.out.println("Game finished");
     }
 }
