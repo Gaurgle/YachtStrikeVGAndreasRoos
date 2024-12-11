@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class shipFactory {
-    private List<Ship> ships;
+    private final List<Ship> ships;
 
     public shipFactory() {
         this.ships = new ArrayList<>();
