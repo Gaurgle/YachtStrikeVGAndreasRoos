@@ -24,7 +24,7 @@ public class Client {
             while (true) {
                 if (in.ready()) {
                     input = in.readLine();
-                    System.out.println(input);
+                    //System.out.println(input);
                     determineAction(input);
 
                 }
@@ -48,31 +48,31 @@ public class Client {
                 String answer;
                 try {
 
-                    while (true){
-                    System.out.println("Do you want to use this preset? (Y/N)");
-                    answer = reader.readLine().toUpperCase();
+                    while (true) {
+                        System.out.println("Do you want to use this preset? (Y/N)");
+                        answer = reader.readLine().toUpperCase();
 
-                    if (answer.equals("Y")) {
-                        System.out.println("Preset selected. Wait for other player.");
+                        if (answer.equals("Y")) {
+                            System.out.println("Preset selected. Wait for other player.");
 
-                        out.println("PRESET_SELECTED:" + i);
+                            out.println("PRESET_SELECTED:" + i);
 
-                        break;
-                    } else {
-                        clear();
-                        createField();
-                        preset(i++);
-                        printField(clientField);
-                    if (i == 6) {
-                        i = 1;
+                            break;
+                        } else {
+                            clear();
+                            createField();
+                            preset(i++);
+                            printField(clientField);
+                            if (i == 6) {
+                                i = 1;
+                            }
+                        }
                     }
-                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
-
         else if (input.equals("ALLOW_SHOT")) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String answer;
@@ -130,8 +130,7 @@ public class Client {
         } else if (input.startsWith("GAME_FINISHED")) {
             String winMessage = input.split(":")[1];
             System.out.println(winMessage);
-            //Todo: lägg in meny-metod
-
+            startMenu();
         }
 
     }
@@ -259,9 +258,9 @@ public class Client {
 
     public boolean checkField() {
         boolean gameStillActive = false;
-        for (int i = 0; i < field.length; i++) {
-            for (int j = 0; j < field[i].length; j++) {
-                if (field[i][j] == 1) {
+        for (int i = 0; i < clientField.length; i++) {
+            for (int j = 0; j < clientField[i].length; j++) {
+                if (clientField[i][j] == 1) {
                     gameStillActive = true;
                     break;
                 }
