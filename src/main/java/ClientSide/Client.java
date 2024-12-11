@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.List;
 
 public class Client {
 
@@ -11,23 +12,22 @@ public class Client {
     private ArrayList<String> letters;
     private ArrayList<String> shots = new ArrayList<>();
     PrintWriter out;
+    BufferedReader reader;
+
     public Client() {
+        reader = new BufferedReader(new InputStreamReader(System.in));
         startMenu();
 
-                    int portNumber = 23456;
-                    try (Socket socket = new Socket("localhost", portNumber);
-                         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-                        out = new PrintWriter(socket.getOutputStream(), true);
+        int portNumber = 23456;
+        try (Socket socket = new Socket("localhost", portNumber);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+            out = new PrintWriter(socket.getOutputStream(), true);
 
-            //Bara lite temporär kod för att testa att uppkopling funkar:
             String input;
-            //while ((input = in.readLine()) != null) {
-            while(true){
+            while (true) {
                 if (in.ready()) {
                     input = in.readLine();
-                    System.out.println(input);
                     determineAction(input);
-
                 }
             }
         } catch (IOException e) {
@@ -45,50 +45,40 @@ public class Client {
                 preset(i);
                 printField(clientField);
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 String answer;
                 try {
 
-                    while (true){
-                    System.out.println("Do you want to use this preset? (Y/N)");
-                    answer = reader.readLine().toUpperCase();
+                    while (true) {
+                        System.out.println("Do you want to use this preset? (Y/N)");
+                        answer = reader.readLine().toUpperCase();
 
-                    if (answer.equals("Y")) {
-                        System.out.println("Preset selected.");
+                        if (answer.equals("Y")) {
+                            System.out.println("Preset selected. Wait for other player.");
 
-                        out.println("PRESET_SELECTED:" + i);
+                            out.println("PRESET_SELECTED:" + i);
 
-                        break;
-                    } else {
-                        clear();
-                        createField();
-                        preset(i++);
-                        printField(clientField);
-                    if (i == 6) {
-                        i = 1;
+                            break;
+                        } else {
+                            clear();
+                            createField();
+                            preset(i++);
+                            printField(clientField);
+                            if (i == 6) {
+                                i = 1;
+                            }
+                        }
                     }
-                    }
-
-
-
-                }
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-
             }
         }
-
         else if (input.equals("ALLOW_SHOT")) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String answer;
 
             try {
-                while (true){
-
-                    do{
+                while (true) {
+                    do {
                         System.out.print("Enter coordinates for shot: ");
                         answer = reader.readLine();
                     }
@@ -103,9 +93,6 @@ public class Client {
                         System.out.println("Already shot");
                     }
                 }
-
-                System.out.println(answer);
-
 
                 int x = letters.indexOf(String.valueOf(answer.charAt(0)).toUpperCase());
                 int y = Integer.parseInt(String.valueOf(answer.charAt(1)));
@@ -128,18 +115,26 @@ public class Client {
             printField(clientField);
 
             out.println(hit);
-
+            out.println(checkField());
         }
-
         else if (input.startsWith("SEND_HIT_STATUS")){
             boolean hit = Boolean.parseBoolean(input.split(":")[1]);
 
             if (hit)
                 System.out.println("hit!");
             else if (!hit)
-                System.out.println("miss..");
-
-
+                System.out.println("miss.. \nWait for other player.");
+        }
+        else if (input.startsWith("GAME_FINISHED")) {
+            String winMessage = input.split(":")[1];
+            System.out.println(winMessage);
+            System.out.println("Press enter to continue.");
+            try {
+                reader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            startMenu();
         }
 
     }
@@ -169,21 +164,7 @@ public class Client {
                 clientField[i][j] = 0;
             }
         }
-
-
-        letters = new ArrayList<>();
-
-        letters.add("A");
-        letters.add("B");
-        letters.add("C");
-        letters.add("D");
-        letters.add("E");
-        letters.add("F");
-        letters.add("G");
-        letters.add("H");
-        letters.add("I");
-        letters.add("J");
-
+        letters = new ArrayList<>(List.of("A","B","C","D","E","F","G","H","I","J"));
     }
 
     public void printField(int[][] field) {
@@ -206,7 +187,6 @@ public class Client {
             }
             System.out.println();
         }
-
     }
 
     public void placeShip(int x, int y) {
@@ -278,14 +258,27 @@ public class Client {
         }
     }
 
-    public void clear(){
+    public boolean checkField() {
+        boolean gameStillActive = false;
+        for (int i = 0; i < clientField.length; i++) {
+            for (int j = 0; j < clientField[i].length; j++) {
+                if (clientField[i][j] == 1) {
+                    gameStillActive = true;
+                    break;
+                }
+            }
+        }
+        return gameStillActive;
+    }
+
+    public void clear() {
         for (int i = 0; i < 100; i++) {
             System.out.println();
         }
     }
     public static void typeWriterEffect(String text) throws InterruptedException {
         for (char c : text.toCharArray()) {
-            System.out.print(c);  
+            System.out.print(c);
             Thread.sleep(15);
         }
         System.out.println();
@@ -346,25 +339,7 @@ public class Client {
                     break;
                 case 2:
                     System.out.println("Starting the game... Get ready!");
-
-                    int portNumber = 23456;
-                    try (Socket socket = new Socket("localhost", portNumber);
-                         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-                        out = new PrintWriter(socket.getOutputStream(), true);
-
-                        String input;
-                        while (true) {
-                            if (in.ready()) {
-                                input = in.readLine();
-                                System.out.println(input);
-                                determineAction(input);
-                            }
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    break;
+                    return;
                 case 3:
                     System.out.println("Exiting the program. Goodbye!");
                     running = false;
@@ -373,9 +348,6 @@ public class Client {
                     System.out.println("Invalid choice. Please select 1, 2, or 3.");
             }
         }
-
         scanner.close();
     }
-
 }
-
