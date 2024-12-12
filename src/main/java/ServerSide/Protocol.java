@@ -24,22 +24,20 @@ public class Protocol {
         while (gameActive) {
             boolean hit = true;
             while (hit) {
-                boolean sunk = false;
+                boolean sunk;
                 currentPlayer.sendToClient("ALLOW_SHOT");
                 String shot = currentPlayer.receieveFromClient();
                 System.out.println("shot at: " + shot);
 
                 currentPlayer.getOpponent().sendToClient("CHECK_SHOT:" + shot);
                 hit = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
-                //TODO: recieve boolean shipSunk
                 sunk = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
-                if (sunk) {
-                    currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit);
-                    currentPlayer.sendToClient("SEND_SUNKEN_SHIP");
+                currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit);
 
-                } else {
-                    currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit);
+                if (sunk) {
+                    currentPlayer.sendToClient("SEND_SUNKEN_SHIP");
                 }
+
                 gameActive = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
                 if (!gameActive){
                     currentPlayer.sendToClient("GAME_FINISHED:Boom! You win!");

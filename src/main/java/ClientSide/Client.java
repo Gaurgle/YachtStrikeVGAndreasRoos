@@ -18,7 +18,7 @@ public class Client {
     PrintWriter out;
     BufferedReader reader;
 
-    public Client() {
+    private Client() {
         reader = new BufferedReader(new InputStreamReader(System.in));
         startMenu();
 
@@ -154,7 +154,7 @@ public class Client {
     }
 
 
-    public void createField() {
+    private void createField() {
         //battleship field
         /*System.out.println("   1, 2, 3, 4, 5, 6, 7, 8, 9, 10");
         System.out.println("A |  |  |  |  |  |  |  |  |  |  |");
@@ -177,7 +177,7 @@ public class Client {
         letters = new ArrayList<>(List.of("A","B","C","D","E","F","G","H","I","J"));
     }
 
-    public void printField(int[][] field) {
+    private void printField(int[][] field) {
 
         System.out.println("    1   2   3   4   5   6   7   8   9   10");
 
@@ -199,11 +199,11 @@ public class Client {
         }
     }
 
-    public void placeShip(int x, int y) {
+    private void placeShip(int x, int y) {
         clientField[x][y] = 1;
     }
 
-    public void placeShips(List<Ship> ships) {
+    private void placeShips(List<Ship> ships) {
 
         for (Ship ship : ships) {
             for (int i = 0; i < ship.getCoordinates().length; i += 2) {
@@ -233,7 +233,7 @@ public class Client {
         placeShips(ships);
     }
 
-    public boolean  shoot(int x, int y) {
+    private boolean  shoot(int x, int y) {
         if (clientField[x][y] == 0) {
             clientField[x][y] = 2;
             return false;
@@ -245,7 +245,7 @@ public class Client {
         }
     }
 
-    public void findShipThatGotHitAndDamageIt(int x, int y) {
+    private void findShipThatGotHitAndDamageIt(int x, int y) {
 
         for (Ship ship : ships) {
             for (int i = 0; i < ship.getCoordinates().length; i += 2) {
@@ -258,7 +258,7 @@ public class Client {
         }
     }
 
-    public boolean checkForDestroyedShips() {
+    private boolean checkForDestroyedShips() {
         for (Ship ship : ships) {
             if (!ship.isAfloat()) {
                 ships.remove(ship);
@@ -270,7 +270,7 @@ public class Client {
 
 
 
-    public boolean checkField() {
+    private boolean checkField() {
         boolean gameStillActive = false;
         for (int i = 0; i < clientField.length; i++) {
             for (int j = 0; j < clientField[i].length; j++) {
@@ -283,12 +283,12 @@ public class Client {
         return gameStillActive;
     }
 
-    public void clear() {
+    private void clear() {
         for (int i = 0; i < 100; i++) {
             System.out.println();
         }
     }
-    public static void typeWriterEffect(String text) throws InterruptedException {
+    private static void typeWriterEffect(String text) throws InterruptedException {
         for (char c : text.toCharArray()) {
             System.out.print(c);
             Thread.sleep(15);
