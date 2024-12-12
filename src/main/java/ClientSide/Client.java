@@ -15,8 +15,8 @@ public class Client {
     private ArrayList<String> letters;
     private ArrayList<String> shots = new ArrayList<>();
     private List<Ship> ships;
-    PrintWriter out;
-    BufferedReader reader;
+    private PrintWriter out;
+    private BufferedReader reader;
 
     private Client() {
         reader = new BufferedReader(new InputStreamReader(System.in));
