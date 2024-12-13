@@ -12,11 +12,13 @@ import java.util.List;
 public class Client {
 
     private final int[][] clientField = new int[10][10];
-    private ArrayList<String> letters;
+    private final int[][] opponentField = new int[10][10];
+    private ArrayList<String> letters = new ArrayList<>(List.of("A","B","C","D","E","F","G","H","I","J"));;
     private ArrayList<String> shots = new ArrayList<>();
     private List<Ship> ships;
     private PrintWriter out;
     private BufferedReader reader;
+    private boolean isFirstShot = true;
 
     private Client() {
         reader = new BufferedReader(new InputStreamReader(System.in));
@@ -83,6 +85,13 @@ public class Client {
             try {
                 while (true) {
                     do {
+                        if (isFirstShot){
+                            System.out.println("Press enter to continue");
+                            reader.readLine();
+                            isFirstShot = false;
+                            printField(opponentField);
+                        }
+
                         System.out.print("Enter coordinates for shot: ");
                         answer = reader.readLine();
                     }
@@ -108,7 +117,7 @@ public class Client {
             }
         }
 
-        else if (input.startsWith("CHECK_SHOT")) {
+        if (input.startsWith("CHECK_SHOT")) {
             String cords = input.split(":")[1];
             int x = Integer.parseInt(cords.split(",")[0]);
             int y = Integer.parseInt(cords.split(",")[1])-1;
@@ -118,6 +127,7 @@ public class Client {
             clear();
             printField(clientField);
 
+            out.println(x+","+y);
             out.println(hit);
             out.println(checkForDestroyedShips());
             out.println(checkField());
@@ -125,17 +135,34 @@ public class Client {
         }
         else if (input.startsWith("SEND_HIT_STATUS")){
             boolean hit = Boolean.parseBoolean(input.split(":")[1]);
+            String cords = input.split(":")[2];
+            int x = Integer.parseInt(cords.split(",")[0]);
+            int y = Integer.parseInt(cords.split(",")[1]);
 
-            if (hit)
+            if (hit) {
+                clear();
                 System.out.println("hit!");
+                opponentField[x][y] = 3;
+                printField(opponentField);
+            }
 
-            else if (!hit)
+            else if (!hit) {
+                clear();
                 System.out.println("miss.. \nWait for other player.");
+                opponentField[x][y] = 2;
+                printField(opponentField);
+                isFirstShot = true;
+            }
+
         }
         else if (input.startsWith("SEND_SUNKEN_SHIP")) {
             System.out.println("Ship sunk!");
         }
-        else if (input.startsWith("GAME_FINISHED")) {
+
+
+
+
+        if (input.startsWith("GAME_FINISHED")) {
             String winMessage = input.split(":")[1];
             System.out.println(winMessage);
             System.out.println("Press enter to continue.");
@@ -174,7 +201,6 @@ public class Client {
                 clientField[i][j] = 0;
             }
         }
-        letters = new ArrayList<>(List.of("A","B","C","D","E","F","G","H","I","J"));
     }
 
     private void printField(int[][] field) {

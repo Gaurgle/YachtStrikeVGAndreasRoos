@@ -30,9 +30,12 @@ public class Protocol {
                 System.out.println("shot at: " + shot);
 
                 currentPlayer.getOpponent().sendToClient("CHECK_SHOT:" + shot);
+                String cord = currentPlayer.getOpponent().receieveFromClient();
                 hit = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
                 sunk = Boolean.parseBoolean(currentPlayer.getOpponent().receieveFromClient());
-                currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit);
+
+
+                currentPlayer.sendToClient("SEND_HIT_STATUS:" + hit + ":" + cord);
 
                 if (sunk) {
                     currentPlayer.sendToClient("SEND_SUNKEN_SHIP");
