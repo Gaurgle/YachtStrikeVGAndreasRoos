@@ -160,7 +160,7 @@ public class Client {
             if (hit) {
                 clear();
                 System.out.println("hit!");
-                audioManager.playHit("small");
+//                audioManager.playHit("small");
                 opponentField[x][y] = 3;
                 printField(opponentField);
             }
@@ -177,7 +177,7 @@ public class Client {
         }
         else if (input.startsWith("SEND_SUNKEN_SHIP")) {
             System.out.println("Ship sunk!");
-            audioManager.playHit("final");
+//            audioManager.playHit("final");
         }
 
 
@@ -300,8 +300,22 @@ public class Client {
             for (int i = 0; i < ship.getCoordinates().length; i += 2) {
                 if (ship.getCoordinates()[i] == x && ship.getCoordinates()[i + 1] == y) {
                     ship.takeDamage();
+                    int hp = ship.getHealthPoints();
+
+                    // spelar olika ljud vid olika status på båtens liv
+                    if (hp == 0) {
+                        audioManager.playHit("final");
+                    } else if (hp == 1) {
+                        audioManager.playHit("distant");
+                    } else {
+                        audioManager.playHit("small");
+                    }
+
                     System.out.println(ship + " took 1 damage");
                     break;
+
+                    // TODO add separate audio for different hits
+                    // vi har ship.size och healthPoints att använda!
                 }
             }
         }
@@ -349,8 +363,7 @@ public class Client {
         boolean running = true;
         Scanner scanner = new Scanner(System.in);
 
-        //TODO denna här loopar "yes"
-        audioManager.playThemeSong("play");
+//        audioManager.playThemeSong("play");
 
         while (running) {
             clear();
@@ -408,6 +421,7 @@ public class Client {
                     return;
                 case 3:
                     System.out.println("Exiting the program. Goodbye!");
+                    audioManager.themeFadeDown(-90.0f);
                     running = false;
                     break;
                 default:

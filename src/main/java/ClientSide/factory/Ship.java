@@ -35,6 +35,8 @@ public abstract class Ship {
         return size;
     }
 
+    public int getHealthPoints() {return healthPoints;}
+
     public boolean isAfloat() {
         return isAfloat;
     }
