@@ -2,6 +2,7 @@ package ClientSide;
 
 import ClientSide.factory.Ship;
 import ClientSide.factory.ShipFactory;
+import ServerSide.AudioManager;
 
 import java.io.*;
 import java.net.Socket;
@@ -20,7 +21,12 @@ public class Client {
     private BufferedReader reader;
     private boolean isFirstShot = true;
 
+    private final AudioManager audioManager;
+
+
     private Client() {
+        audioManager = AudioManager.getInstance();
+
         reader = new BufferedReader(new InputStreamReader(System.in));
         startMenu();
 
@@ -57,8 +63,14 @@ public class Client {
                     while (true) {
                         System.out.println("Do you want to use this preset? (Y/N)");
                         answer = reader.readLine().toUpperCase();
+                        if (answer.equals("Y")) {
+                            audioManager.playYesNo("yes");
+                        } else if (answer.equals("N")) {
+                            audioManager.playYesNo("no");
+                        }
 
                         if (answer.equals("Y")) {
+                            audioManager.playYesNo("yes");
                             System.out.println("Preset selected. Wait for other player.");
 
                             out.println("PRESET_SELECTED:" + i);
@@ -88,12 +100,14 @@ public class Client {
                         if (isFirstShot){
                             System.out.println("Press enter to continue");
                             reader.readLine();
+                            audioManager.playYesNo("yes");
                             isFirstShot = false;
                             printField(opponentField);
                         }
 
                         System.out.print("Enter coordinates for shot: ");
                         answer = reader.readLine();
+                        audioManager.playYesNo("yes");
                     }
                     while(!answer.matches("^[A-Ja-j](10|[0-9])$"));
 
@@ -102,8 +116,9 @@ public class Client {
                             shots.add(answer);
                             break;
                         }
-                    } else if (shots.contains(answer)) {
+                    } else {
                         System.out.println("Already shot");
+                        audioManager.playShot(1);
                     }
                 }
 
@@ -139,9 +154,13 @@ public class Client {
             int x = Integer.parseInt(cords.split(",")[0]);
             int y = Integer.parseInt(cords.split(",")[1]);
 
+
+            //TODO här ska vi spela olika ljud beropende på hur må¨nga hits
+            //TODO kolla hur vi markerar träffar samt HP per skepp
             if (hit) {
                 clear();
                 System.out.println("hit!");
+                audioManager.playHit("small");
                 opponentField[x][y] = 3;
                 printField(opponentField);
             }
@@ -149,6 +168,7 @@ public class Client {
             else if (!hit) {
                 clear();
                 System.out.println("miss.. \nWait for other player.");
+                audioManager.playSplash();
                 opponentField[x][y] = 2;
                 printField(opponentField);
                 isFirstShot = true;
@@ -157,6 +177,7 @@ public class Client {
         }
         else if (input.startsWith("SEND_SUNKEN_SHIP")) {
             System.out.println("Ship sunk!");
+            audioManager.playHit("final");
         }
 
 
@@ -168,6 +189,7 @@ public class Client {
             System.out.println("Press enter to continue.");
             try {
                 reader.readLine();
+                audioManager.playYesNo("yes");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -253,6 +275,7 @@ public class Client {
                 break;
             default:
                 System.out.println("Invalid preset. No ships placed.");
+                audioManager.playYesNo("no");
         }
 
 
@@ -326,6 +349,9 @@ public class Client {
         boolean running = true;
         Scanner scanner = new Scanner(System.in);
 
+        //TODO denna här loopar "yes"
+        audioManager.playThemeSong("play");
+
         while (running) {
             clear();
             System.out.println("WELCOME TO BATTLESHIP\n");
@@ -337,7 +363,6 @@ public class Client {
 
             int choice = scanner.nextInt();
             scanner.nextLine();
-
 
             switch (choice) {
                 case 1:
@@ -365,9 +390,12 @@ public class Client {
                     };
 
                     clear();
-                    for (String step : steps) {
+                    for (int i = 0; i < steps.length; i++) {
                         try {
-                            typeWriterEffect(step);
+                            audioManager.themeFadeDown(-7.0f);
+                            audioManager.playClack(i +1);
+                            typeWriterEffect(steps[i]);
+                            audioManager.themeFadeUp();
                         } catch (InterruptedException e) {
                             System.err.println("Typing interrupted: " + e.getMessage());
                         }

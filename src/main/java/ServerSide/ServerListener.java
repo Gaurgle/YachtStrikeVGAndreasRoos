@@ -5,6 +5,9 @@ import java.net.ServerSocket;
 
 public class ServerListener {
     public ServerListener() {
+
+        AudioManager audioManager = AudioManager.getInstance();
+//        audioManager.playThemeSong("play");
         final String serverUp = "The server is running!";
         final String welcome = "Welcome Player 1. Please wait for Player 2 to connect.";
 
