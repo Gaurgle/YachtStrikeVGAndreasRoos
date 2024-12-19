@@ -14,7 +14,7 @@ public class Client {
 
     private final int[][] clientField = new int[10][10];
     private final int[][] opponentField = new int[10][10];
-    private ArrayList<String> letters = new ArrayList<>(List.of("A","B","C","D","E","F","G","H","I","J"));;
+    private ArrayList<String> letters = new ArrayList<>(List.of("A","B","C","D","E","F","G","H","I","J"));
     private ArrayList<String> shots = new ArrayList<>();
     private List<Ship> ships;
     private PrintWriter out;
@@ -50,47 +50,44 @@ public class Client {
     private void determineAction(String input) {
 
         if (input.equals("ALLOW_SELECT_PRESET")) {
-            {
-                int i = 1;
-                clear();
-                createField();
-                preset(i);
-                printField(clientField);
+            int presetIndex = 1;
+            clear();
+            createField();
+            preset(presetIndex);
+            printField(clientField);
 
-                String answer;
-                try {
+            String answer;
 
-                    while (true) {
-                        System.out.println("Do you want to use this preset? (Y/N)");
-                        answer = reader.readLine().toUpperCase();
-                        if (answer.equals("Y")) {
-                            audioManager.playYesNo("yes");
-                        } else if (answer.equals("N")) {
-                            audioManager.playYesNo("no");
+            try {
+                while (true) {
+                    System.out.println("Do you want to use this preset? (Y/N)");
+                    answer = reader.readLine().toUpperCase();
+
+                    if  (answer.equals("Y")) {
+                        audioManager.playYesNo("yes");
+                        out.println("PRESET_SELECTED:" + presetIndex);
+                        break;
+
+                    } else if (answer.equals("N")) {
+                        audioManager.playYesNo("no");
+                        presetIndex++;
+                        if (presetIndex == 4) {
+                            presetIndex = 1;
                         }
 
-                        if (answer.equals("Y")) {
-                            audioManager.playYesNo("yes");
-                            System.out.println("Preset selected. Wait for other player.");
-
-                            out.println("PRESET_SELECTED:" + i);
-
-                            break;
-                        } else {
-                            clear();
-                            createField();
-                            preset(i++);
-                            printField(clientField);
-                            if (i == 6) {
-                                i = 1;
-                            }
-                        }
+                        clear();
+                        createField();
+                        preset(presetIndex);
+                        printField(clientField);
+                    } else {
+                        System.out.println("Invalid input. type Y or N.");
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+
         else if (input.equals("ALLOW_SHOT")) {
             String answer;
 
@@ -100,22 +97,19 @@ public class Client {
                         if (isFirstShot){
                             System.out.println("Press enter to continue");
                             reader.readLine();
-                            audioManager.playYesNo("yes");
                             isFirstShot = false;
                             printField(opponentField);
                         }
 
                         System.out.print("Enter coordinates for shot: ");
                         answer = reader.readLine();
-                        audioManager.playYesNo("yes");
                     }
                     while(!answer.matches("^[A-Ja-j](10|[0-9])$"));
 
                     if (!shots.contains(answer)) {
-                        {
-                            shots.add(answer);
-                            break;
-                        }
+                        shots.add(answer);
+                        break;
+
                     } else {
                         System.out.println("Already shot");
                         audioManager.playShot(1);
@@ -154,13 +148,9 @@ public class Client {
             int x = Integer.parseInt(cords.split(",")[0]);
             int y = Integer.parseInt(cords.split(",")[1]);
 
-
-            //TODO här ska vi spela olika ljud beropende på hur må¨nga hits
-            //TODO kolla hur vi markerar träffar samt HP per skepp
             if (hit) {
                 clear();
                 System.out.println("hit!");
-//                audioManager.playHit("small");
                 opponentField[x][y] = 3;
                 printField(opponentField);
             }
@@ -177,7 +167,6 @@ public class Client {
         }
         else if (input.startsWith("SEND_SUNKEN_SHIP")) {
             System.out.println("Ship sunk!");
-//            audioManager.playHit("final");
         }
 
 
@@ -273,6 +262,8 @@ public class Client {
             case 2:
                 ships = shipFactory.createShips(2);
                 break;
+            case 3: ships = shipFactory.createShips(3);
+                break;
             default:
                 System.out.println("Invalid preset. No ships placed.");
                 audioManager.playYesNo("no");
@@ -302,20 +293,19 @@ public class Client {
                     ship.takeDamage();
                     int hp = ship.getHealthPoints();
 
-                    // spelar olika ljud vid olika status på båtens liv
-                    if (hp == 0) {
-                        audioManager.playHit("final");
-                    } else if (hp == 1) {
-                        audioManager.playHit("distant");
-                    } else {
-                        audioManager.playHit("small");
+                    String hitType = switch (hp){
+                        case 0 -> "final";
+                        case 1 -> "medium";
+                        default -> "small";
+                    };
+                    audioManager.playHit(hitType);
+
+                    if (hp == 2) {
+                        ship.playHitSound();
                     }
 
                     System.out.println(ship + " took 1 damage");
                     break;
-
-                    // TODO add separate audio for different hits
-                    // vi har ship.size och healthPoints att använda!
                 }
             }
         }
@@ -417,10 +407,12 @@ public class Client {
                     }
                     break;
                 case 2:
+                    audioManager.playYesNo("yes");
                     System.out.println("Starting the game... Get ready!");
                     return;
                 case 3:
                     System.out.println("Exiting the program. Goodbye!");
+                    audioManager.playYesNo("no");
                     audioManager.themeFadeDown(-90.0f);
                     running = false;
                     break;

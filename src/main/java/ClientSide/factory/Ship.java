@@ -1,17 +1,29 @@
 package ClientSide.factory;
 
+import Audio.AudioEnum;
+import ServerSide.AudioManager;
+
+import java.util.Random;
+
 public abstract class Ship {
 
     private final int size;
     private int[] coordinates;
     private int healthPoints;
     private boolean isAfloat;
+    private final AudioEnum[] hitSounds;
 
-    public Ship(int size, int[] coordinates) {
+    public Ship(int size, int[] coordinates, AudioEnum... hitSounds) {
         this.size = size;
         this.healthPoints = size;
         setCoordinates(coordinates);
         isAfloat = true;
+
+        if (hitSounds.length == 0) {
+            throw new IllegalArgumentException ("Every ship needs at least 1 speicific sounds");
+        }
+
+        this.hitSounds = hitSounds;
     }
 
     public void takeDamage() {
@@ -41,9 +53,14 @@ public abstract class Ship {
         return isAfloat;
     }
 
-
     public void sinkShip() {
         isAfloat = false;
     }
 
+    public void playHitSound() {
+        int randomIndex = new Random().nextInt(hitSounds.length);
+        AudioEnum chosenSound = hitSounds[randomIndex];
+
+        AudioManager.getInstance().playHit(chosenSound);
+    }
 }
