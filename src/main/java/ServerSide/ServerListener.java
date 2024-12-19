@@ -5,10 +5,11 @@ import java.net.ServerSocket;
 
 public class ServerListener {
     public ServerListener() {
+
         final String serverUp = "The server is running!";
         final String welcome = "Welcome Player 1. Please wait for Player 2 to connect.";
 
-        try (ServerSocket listener = new ServerSocket(23456)){
+        try (ServerSocket listener = new ServerSocket(23456)) {
             System.out.println(serverUp);
             while (true) {
                 Player player1 = new Player(listener.accept(), '1');
