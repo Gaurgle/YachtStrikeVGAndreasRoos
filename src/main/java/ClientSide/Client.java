@@ -26,7 +26,6 @@ public class Client {
 
     private Client() {
         audioManager = AudioManager.getInstance();
-
         reader = new BufferedReader(new InputStreamReader(System.in));
         startMenu();
 
@@ -351,9 +350,9 @@ public class Client {
 
     private void startMenu(){
         boolean running = true;
+        audioManager.playThemeSong("play");
         Scanner scanner = new Scanner(System.in);
 
-//        audioManager.playThemeSong("play");
 
         while (running) {
             clear();
@@ -363,63 +362,91 @@ public class Client {
             System.out.println("1. Info about the game");
             System.out.println("2. Start the game");
             System.out.println("3. Exit");
+            System.out.println("TIP: Press 'm' to mute/unmute music while in menu");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            String line;
+            try {
+                line = reader.readLine();
+                if (line.equals("m")) {
+                    audioManager.playThemeSong("mute");
+                    continue;
+                }
+                int choice;
+                try {
+                    choice = Integer.parseInt(line);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input, please enter, 1, 2, 3, or m");
+                    continue;
+                }
 
-            switch (choice) {
-                case 1:
-                    String[] steps = {
-                            "Step 1: Introduction\n" +
-                                    "Welcome to Battleship! This game is played on a 10x10 grid with coordinates (A-J, 1-10).",
 
-                            "Step 2: The Grid\n" +
-                                    "The grid is 10x10 with rows labeled A-J and columns labeled 1-10. Example: A5.",
 
-                            "Step 3: Setting Up\n" +
-                                    "Please Choose your layout: \nTIPS: Layout ISAAC always wins the game",
+                switch (choice) {
+                    case 1:
+                        showGameInfo();
+                        break;
 
-                            "Step 4: Taking Turns\n" +
-                                    "Players take turns calling out coordinates (e.g., A5). Game will tell you either 'hit' or 'miss'. while it will update your grid.",
+                    case 2:
+                        audioManager.playYesNo("yes");
+                        System.out.println("Starting game");
+                        return;
 
-                            "Step 5: Objective\n" +
-                                    "Sink all of your opponent’s ships by hitting all the squares of each ship.",
-
-                            "Step 6: Example Turn\n" +
-                                    "Player 1: 'I fire at C7'. Opponent checks, says 'hit' or 'miss'. Player updates grid.",
-
-                            "Step 7: End of the Game\n" +
-                                    "The game ends when all of one player’s ships are sunk. The other player wins."
-                    };
-
-                    clear();
-                    for (int i = 0; i < steps.length; i++) {
-                        try {
-                            audioManager.themeFadeDown(-7.0f);
-                            audioManager.playClack(i +1);
-                            typeWriterEffect(steps[i]);
-                            audioManager.themeFadeUp();
-                        } catch (InterruptedException e) {
-                            System.err.println("Typing interrupted: " + e.getMessage());
-                        }
-                        System.out.println("\nPress enter to continue");
-                        scanner.nextLine();
-                    }
-                    break;
-                case 2:
-                    audioManager.playYesNo("yes");
-                    System.out.println("Starting the game... Get ready!");
-                    return;
-                case 3:
-                    System.out.println("Exiting the program. Goodbye!");
-                    audioManager.playYesNo("no");
-                    audioManager.themeFadeDown(-90.0f);
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select 1, 2, or 3.");
+                    case 3:
+                        System.out.println("Exiting the program. Goodbye!");
+                        audioManager.playYesNo("no");
+                        audioManager.themeFadeDown(-90.0f);
+                        running = false;
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please select 1, 2, or 3.");
+                        break;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        scanner.close();
+    }
+
+private void showGameInfo() {
+    String[] steps = {
+            "Step 1: Introduction\n" +
+                    "Welcome to Battleship! This game is played on a 10x10 grid with coordinates (A-J, 1-10).",
+
+            "Step 2: The Grid\n" +
+                    "The grid is 10x10 with rows labeled A-J and columns labeled 1-10. Example: A5.",
+
+            "Step 3: Setting Up\n" +
+                    "Please Choose your layout",
+
+            "Step 4: Taking Turns\n" +
+                    "Players take turns calling out coordinates (e.g., A5). Game will tell you either 'hit' or 'miss'. while it will update your grid.",
+
+            "Step 5: Objective\n" +
+                    "Sink all of your opponent’s ships by hitting all the squares of each ship.",
+
+            "Step 6: Example Turn\n" +
+                    "Player 1: 'I fire at C7'. Opponent checks, says 'hit' or 'miss'. Player updates grid.",
+
+            "Step 7: End of the Game\n" +
+                    "The game ends when all of one player’s ships are sunk. The other player wins."
+    };
+
+        clear();
+        for (int i = 0; i < steps.length; i++) {
+            try {
+                audioManager.themeFadeDown(-7.0f);
+                audioManager.playClack(i +1);
+                typeWriterEffect(steps[i]);
+                audioManager.themeFadeUp();
+            } catch (InterruptedException e) {
+                System.err.println("Typing interrupted: " + e.getMessage());
+            }
+            System.out.println("\nPress enter to continue");
+            try {
+                reader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
