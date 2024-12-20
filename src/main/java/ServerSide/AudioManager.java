@@ -144,6 +144,7 @@ public class AudioManager {
         audioSongYachtTheme.setVolume(targetVolumeDB,20,60);
     }
 
+    // sets theme volum t0 default
     public void themeFadeUp(){
         audioSongYachtTheme.setVolume(0.0f,20,100);
     }

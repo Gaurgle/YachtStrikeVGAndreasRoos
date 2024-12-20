@@ -168,9 +168,6 @@ public class Client {
             System.out.println("Ship sunk!");
         }
 
-
-
-
         if (input.startsWith("GAME_FINISHED")) {
             String winMessage = input.split(":")[1];
             System.out.println(winMessage);
@@ -183,7 +180,6 @@ public class Client {
             }
             startMenu();
         }
-
     }
 
     public static void main(String[] args) {
@@ -351,6 +347,7 @@ public class Client {
     private void startMenu(){
         boolean running = true;
         audioManager.playThemeSong("play");
+        audioManager.themeFadeUp();
         Scanner scanner = new Scanner(System.in);
 
 
@@ -379,8 +376,6 @@ public class Client {
                     continue;
                 }
 
-
-
                 switch (choice) {
                     case 1:
                         showGameInfo();
@@ -389,6 +384,7 @@ public class Client {
                     case 2:
                         audioManager.playYesNo("yes");
                         System.out.println("Starting game");
+                        audioManager.themeFadeDown(-6.0f);
                         return;
 
                     case 3:
