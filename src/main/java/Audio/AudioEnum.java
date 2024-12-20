@@ -2,6 +2,7 @@ package Audio;
 
 public enum AudioEnum {
 
+    // audio clips pathfiles
     THEME("wavYachtTheme.wav"),
     SHOT1("wavShot1.wav"),
     SHOT2("wavShot2.wav"),
@@ -31,7 +32,6 @@ public enum AudioEnum {
     TRUMP1("wavTRUMP1.wav"),
     TRUMP2("wavTRUMP2.wav"),
     WARREN1("wavWARREN1.wav");
-
 
     private final String filePath;
 

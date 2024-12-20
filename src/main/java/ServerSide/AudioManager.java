@@ -58,14 +58,14 @@ public class AudioManager {
         }
     }
 
-
+    // instantiating AudioManager
     public static AudioManager getInstance() {
         if (instance == null) {
             instance = new AudioManager();
         } return instance;
     }
 
-    // "uppgraderbart" fan heter det på engelska?
+    // plays shot sounds when shot misses
     public void playShot(int Index){
         switch(Index){
             case 1 -> audioShot1.play();
@@ -74,6 +74,7 @@ public class AudioManager {
         }
     }
 
+    // hit sounds
     public void playHit(String Type){
         switch(Type.toLowerCase()){
             case "small" -> audioHitSmall.play();
@@ -94,6 +95,7 @@ public class AudioManager {
         }
     }
 
+    // yes / no sounds
     public void playYesNo (String yesNo){
         switch(yesNo.toLowerCase()){
             case "yes" -> audioYes.play();
@@ -102,6 +104,7 @@ public class AudioManager {
         }
     }
 
+    // plays keyboard sounds in info-menu
     public void playClack(int Index){
         switch(Index){
             case 1 -> audioClack1.play();
@@ -124,6 +127,7 @@ public class AudioManager {
         }
     }
 
+    // controls ship-sounds
     public void playHit(AudioEnum hitType){
         switch(hitType) {
             case JP1 -> voiceJP1.play();

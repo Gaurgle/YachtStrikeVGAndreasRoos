@@ -17,14 +17,12 @@ public class Audio implements LineListener {
         this.loopAudio = loopAudio;
         this.AudioEnum = AudioEnum;
 
-
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("Audio/" + fileName);
         if (inputStream == null) {
             throw new UnsupportedAudioFileException("Audio file" + fileName +"is not found");
         }
 
-
-        // Audio converter
+        // Audio converter, adjusts to local audio settings.
         try (AudioInputStream originalStream = AudioSystem.getAudioInputStream(inputStream)) {
             AudioFormat baseFormat = originalStream.getFormat();
             AudioFormat compatibleFormat = new AudioFormat(
@@ -63,7 +61,7 @@ public class Audio implements LineListener {
         }
     }
 
-    // mutes using frame position
+    // mutes function using frame position instead of volume.
     public void mute() {
         if (isMuted) {
             clip.setFramePosition(songPosition); // sets song position
@@ -78,6 +76,7 @@ public class Audio implements LineListener {
         isMuted = !isMuted;
     }
 
+    // volume adjustment
     public void setVolume(float targetVolumeDB, int steps, long sweepMS) {
         if (clip == null) return;
             try {
