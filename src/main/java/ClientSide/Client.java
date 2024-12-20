@@ -67,7 +67,7 @@ public class Client {
                         out.println("PRESET_SELECTED:" + presetIndex);
                         break;
 
-                    } else if (answer.equals("N")) {
+                    } else if (answer.equalsIgnoreCase("N")) {
                         audioManager.playYesNo("no");
                         presetIndex++;
                         if (presetIndex == 4) {

@@ -20,7 +20,7 @@ public abstract class Ship {
         isAfloat = true;
 
         if (hitSounds.length == 0) {
-            throw new IllegalArgumentException ("Every ship needs at least 1 speicific sounds");
+            throw new IllegalArgumentException ("Every ship needs at least 1 specific sound");
         }
 
         this.hitSounds = hitSounds;
